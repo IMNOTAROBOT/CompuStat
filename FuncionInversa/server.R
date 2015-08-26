@@ -3,6 +3,8 @@
 # You can find out more about building applications with Shiny here:
 # 
 # http://www.rstudio.com/shiny/
+# Karen Poblete 116452
+# Tarea 1. Funcion Inversa
 #
 
 library(shiny)
