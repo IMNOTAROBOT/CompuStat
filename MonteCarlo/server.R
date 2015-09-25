@@ -1,8 +1,8 @@
 
-# TAREA 2. BOX MULLER
+# TAREA 3. MONTECARLO
 # SERVER CODE
 # KAREN POBLETE 116452
-# 25/AGO/2015
+# 31/AGO/2015
 #
 
 library(shiny)
@@ -12,7 +12,7 @@ shinyServer(function(input, output) {
   output$boxmuller <- renderPlot({
     theta <- runif(input$num, min = 0, max = 2*pi)
     u <- runif(input$num, min = 0, max = 1)
-    k <- log(u)*(-2)
+    k <- log(1/(1-u))
     r <- sqrt(k)
     x <- r * cos(theta)
     y <- r * sin(theta)
