@@ -10,7 +10,7 @@ library(shiny)
 shinyUI(fluidPage(
 
   # Application title
-  headerPanel("Generación de exponenciales"),
+  headerPanel("Montecarlo"),
   
   # Sidebar with a slider input for number of bins
   sidebarPanel(
@@ -19,6 +19,11 @@ shinyUI(fluidPage(
                 min = 1,
                 max = 50,
                 value = 30),
+    sliderInput("rep",
+                "Número de repeticiones:",
+                min = 1,
+                max = 5000,
+                value = 1000),
     numericInput("num", 
                  label = "Número de muestras:", 
                  min = 1,
@@ -27,9 +32,8 @@ shinyUI(fluidPage(
   ),
   
   mainPanel(
-    plotOutput("boxmuller"),
-    plotOutput("boxmullerY"),
-    dataTableOutput("tableX"),
-    dataTableOutput("tableY")
+    textOutput("valReal"),
+    plotOutput("monteCarloCrudo")
+    
   )
 ))

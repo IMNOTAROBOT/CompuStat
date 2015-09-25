@@ -8,25 +8,68 @@
 library(shiny)
 
 shinyServer(function(input, output) {
-
-  output$boxmuller <- renderPlot({
-    theta <- runif(input$num, min = 0, max = 2*pi)
-    u <- runif(input$num, min = 0, max = 1)
-    k <- log(1/(1-u))
-    r <- sqrt(k)
-    x <- r * cos(theta)
-    y <- r * sin(theta)
-    bins <- seq(min(x), max(x), length.out = input$bins + 1)
+  
+  output$valReal <- renderText({ 
+    paste("El valor real de la normal de [0,2]:", pnorm(2)-1/2)
+  })
+  
+  output$monteCarloCrudo <- renderPlot({
+    estim <- rep(0,input$rep)
+    phi<-function(x){ 2*dnorm(x)}
+    for(i in 1:input$rep){
+      U<-runif(input$num,0,2)
+      
+      estim[i] <- mean(phi(U))
+    }
+    
+    bins <- seq(min(estim), max(estim), length.out = input$bins + 1)
     # draw the histogram with the specified number of bins
     
-    hist(x, breaks = bins, col = 'darkgray', border = 'white', main = "BoxMuller X")
+    hist(estim, breaks = bins, col = 'darkgray', border = 'white', main = paste("MonteCarlo crudo, con repeticiones: ", input$rep))
     
-    output$boxmullerY <- renderPlot({
-      bins <- seq(min(y), max(y), length.out = input$bins + 1)
-      hist(y, breaks = bins, col = 'darkgray', border = 'white', main = "BoxMuller Y")
-    })
-    output$tableX <- renderDataTable({data.frame(x = x)})
-    output$tableY <- renderDataTable({data.frame(y = y)})
   })
-
+  
 })
+
+
+
+
+#lo mismo pero diferente
+#nsim <- 10000
+#usamos metodo de la funcion inversa
+#U<-runif(nsim,0,2)
+#exponencial(1) truncada a [0.2]
+#X<- -log(1 - (1 - (1-exp(-2))*U))
+#la densidad de la exponencial truncada
+#fun <- function(x) dexp(x)/(1-exp(-2))
+#monte carlos
+#phi <- function(x) dnorm(x)/fun(x)
+#estim2 <- mean(phi(U))
+
+#El verdadero valor es:
+#pnorm(10)-1/2
+#lo mismo pero diferente
+#nsim <- 10000
+#usamos metodo de la funcion inversa
+#U<-runif(nsim,0,10)
+#exponencial(1) truncada a [0,10]
+#X<- -log(1 - (1 - (1-exp(-2))*U))
+#la densidad de la exponencial truncada
+#fun <- function(x) dexp(x)/(1-exp(-2))
+#monte carlos
+#phi <- function(x) dnorm(x)/fun(x)
+#estim2 <- mean(phi(U))
+
+#otro ejemplo
+
+#a<-0
+#b <- 1000
+#nsim <- 100
+
+#crudo
+#U <- runif(nsim, a, b)
+#mean((b-a)*dnorm(U))
+
+#prioritario
+#U <- rexp(nsim,rate = 4)
+#mean(dnorm(U)/dexp(U))
