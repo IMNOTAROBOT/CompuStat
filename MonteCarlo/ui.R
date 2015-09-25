@@ -34,7 +34,9 @@ shinyUI(fluidPage(
   mainPanel(
     textOutput("valReal"),
     plotOutput("monteCarloCrudo"),
-    plotOutput("monteCarlo")
+    plotOutput("monteCarloCrudoError"),
+    plotOutput("monteCarlo"),
+    plotOutput("monteCarloError")
     
   )
 ))
