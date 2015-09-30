@@ -12,17 +12,17 @@ library(shiny)
 shinyUI(pageWithSidebar(
   
   # Application title
-  headerPanel("Generación de exponenciales"),
+  headerPanel("Generacion de exponenciales"),
   
   # Sidebar with a slider input for number of bins
   sidebarPanel(
     sliderInput("bins",
-                "Número de categorías:",
+                "Numero de categorias:",
                 min = 1,
                 max = 50,
                 value = 30),
     numericInput("num", 
-                 label = "Número de muestras:", 
+                 label = "Numero de muestras:", 
                  min = 1,
                  max = 100000,
                  value = 200),
@@ -31,7 +31,8 @@ shinyUI(pageWithSidebar(
                  min = 1,
                  max = 10,
                  value = 1),
-    textInput("file", label = "Documento con los valores de pesos y lamda para mezcla de exponenciales", value = "C:/Users/karen/Documents/ITAM14-MCC3/Tarea1/exponenciales.txt")
+    textInput("file", label = "Documento con los valores de pesos y lamda para mezcla de exponenciales", 
+              value = "exponenciales.txt")
   ),
   
   mainPanel(
