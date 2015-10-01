@@ -27,6 +27,19 @@ shinyServer(function(input, output) {
     })
     output$tableX <- renderDataTable({data.frame(x = x)})
     output$tableY <- renderDataTable({data.frame(y = y)})
+    
+    #Pruebas de ajuste shapiro-Wilk
+    output$studentX <- renderPlot({
+      plot(density(x))
+      shapiro.test(x)
+      qqnorm(x);qqline(x, col = 2)
+    })
+    
+    output$studentY <- renderPlot({
+      plot(density(y))
+      shapiro.test(y)
+      qqnorm(y);qqline(y, col = 2)
+    })
   })
 
 })

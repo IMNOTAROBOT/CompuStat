@@ -10,26 +10,27 @@ library(shiny)
 shinyUI(fluidPage(
 
   # Application title
-  headerPanel("Generación de exponenciales"),
+  headerPanel("Generacion de normales"),
   
   # Sidebar with a slider input for number of bins
   sidebarPanel(
     sliderInput("bins",
-                "Número de categorías:",
+                "Numero de categorias:",
                 min = 1,
                 max = 50,
                 value = 30),
     numericInput("num", 
-                 label = "Número de muestras:", 
+                 label = "Numero de muestras:", 
                  min = 1,
                  max = 100000,
                  value = 3000)
   ),
   
   mainPanel(
-    plotOutput("boxmuller"),
-    plotOutput("boxmullerY"),
-    dataTableOutput("tableX"),
-    dataTableOutput("tableY")
+    tabsetPanel(
+      
+      tabPanel('BoxMullerX', plotOutput("boxmuller"), h2("Ajuste a normal con prueba shapiro-Wilk "), h4("Mientras mas cerca a la linea diagonal mejor"),plotOutput("studentX"), h2("Tabla de datos"),dataTableOutput("tableX")),
+      tabPanel('BoxMullerY', plotOutput("boxmullerY"), h2("Ajuste a normal con prueba shapiro-Wilk"), h4("Mientras mas cerca a la linea diagonal mejor"), plotOutput("studentY"),h2("Tabla de datos"), dataTableOutput("tableY"))
+    )
   )
 ))
