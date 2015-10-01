@@ -34,8 +34,8 @@ shinyUI(fluidPage(
   mainPanel(
     h3(textOutput("valReal")) ,
     tabsetPanel(
-      tabPanel('MonteCarlo crudo', plotOutput("monteCarloCrudo"),h3("Error"), plotOutput("monteCarloCrudoError")),
-      tabPanel('MonteCarlo',plotOutput("monteCarlo"), h3("Error"), plotOutput("monteCarloError"))
+      tabPanel('MonteCarlo crudo', plotOutput("monteCarloCrudo"),h3(textOutput("alphaCrudo")),h3("Error"), plotOutput("monteCarloCrudoError")),
+      tabPanel('MonteCarlo',plotOutput("monteCarlo"), h3(textOutput("alphaMonte")),h3("Error"), plotOutput("monteCarloError"))
     )
     
   )

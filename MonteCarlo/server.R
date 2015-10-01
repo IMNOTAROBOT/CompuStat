@@ -24,6 +24,11 @@ shinyServer(function(input, output) {
     bins <- seq(min(estim), max(estim), length.out = input$bins + 1)
     hist(estim, breaks = bins, col = 'darkgray', border = 'white', main = paste("MonteCarlo crudo, con repeticiones: ", input$rep))
     
+    alpha <- 0.05
+    int.quant <- quantile(estim, c(alpha/2, 1- alpha/2))
+    output$alphaCrudo <- renderText({
+      paste(paste(paste("Intervalo de confianza con alpha 0.05, percentiles:", int.quant[1])," , "), int.quant[2])
+    })
   })
   
   output$monteCarloCrudoError <- renderPlot({
@@ -56,6 +61,11 @@ shinyServer(function(input, output) {
     bins <- seq(min(estim), max(estim), length.out = input$bins + 1)
     hist(estim, breaks = bins, col = 'darkgray', border = 'white', main = paste("MonteCarlo, con repeticiones: ", input$rep))
     
+    alpha <- 0.05
+    int.quant <- quantile(estim, c(alpha/2, 1- alpha/2))
+    output$alphaMonte <- renderText({
+      paste(paste(paste("Intervalo de confianza con alpha 0.05, percentiles:", int.quant[1])," , "), int.quant[2])
+    })
   })
   
   output$monteCarloError <- renderPlot({
