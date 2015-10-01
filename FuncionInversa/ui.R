@@ -36,9 +36,11 @@ shinyUI(pageWithSidebar(
   ),
   
   mainPanel(
-    plotOutput("distPlot"),
-    dataTableOutput("table"),
-    plotOutput("mezcla"),
-    dataTableOutput("tableMix")
+    
+      tabsetPanel(
+        
+        tabPanel('Simple', plotOutput("distPlot"),h2("Tabla de datos"),dataTableOutput("table")),
+        tabPanel('Mezcla', plotOutput("mezcla"), h2("Parametros de las exponenciales"), dataTableOutput("valores"), h2("Tabla de datos"),dataTableOutput("tableMix"))
+      )
   )
 ))

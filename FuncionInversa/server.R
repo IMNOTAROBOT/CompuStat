@@ -29,6 +29,7 @@ shinyServer(function(input, output) {
     bins <- seq(min(totexp), max(totexp), length.out = input$bins + 1)
     hist(totexp, breaks = bins, col = 'darkgray', border = 'white', main = "Mezcla")
     
+    output$valores <- renderDataTable({data.frame(mix)})
     output$tableMix <- renderDataTable({data.frame(mezcla = totexp)})
   })
   
