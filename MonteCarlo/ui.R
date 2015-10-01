@@ -15,28 +15,28 @@ shinyUI(fluidPage(
   # Sidebar with a slider input for number of bins
   sidebarPanel(
     sliderInput("bins",
-                "Número de categorías:",
+                "Numero de categorías:",
                 min = 1,
-                max = 50,
-                value = 30),
+                max = 100,
+                value = 50),
     sliderInput("rep",
-                "Número de repeticiones:",
+                "Numero de repeticiones:",
                 min = 1,
                 max = 5000,
-                value = 1000),
+                value = 500),
     numericInput("num", 
-                 label = "Número de muestras:", 
+                 label = "Numero de muestras:", 
                  min = 1,
-                 max = 100000,
-                 value = 3000)
+                 max = 10000,
+                 value = 500)
   ),
   
   mainPanel(
-    textOutput("valReal"),
-    plotOutput("monteCarloCrudo"),
-    plotOutput("monteCarloCrudoError"),
-    plotOutput("monteCarlo"),
-    plotOutput("monteCarloError")
+    h3(textOutput("valReal")) ,
+    tabsetPanel(
+      tabPanel('MonteCarlo crudo', plotOutput("monteCarloCrudo"),h3("Error"), plotOutput("monteCarloCrudoError")),
+      tabPanel('MonteCarlo',plotOutput("monteCarlo"), h3("Error"), plotOutput("monteCarloError"))
+    )
     
   )
 ))

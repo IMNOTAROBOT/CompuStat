@@ -28,14 +28,14 @@ shinyServer(function(input, output) {
   
   output$monteCarloCrudoError <- renderPlot({
     valor <- pnorm(2)-1/2
-    estim <- rep(0,input$num)
+    error <- rep(0,input$num)
     phi<-function(x){ 2*dnorm(x)}
     for(i in 1:input$num){
       U<-runif(i,0,2)
-      estim[i] <- mean(phi(U)) - valor
+      error[i] <- mean(phi(U)) - valor
     }
-    t <- seq(1, input$num, 1) 
-    plot(t,estim, main = "MonteCarlo Error ", type="l",col="red")
+    muestras <- seq(1, input$num, 1) 
+    plot(muestras,error, main = "MonteCarlo Error ", type="l",col="red")
   })
   
   output$monteCarlo <- renderPlot({
@@ -61,7 +61,7 @@ shinyServer(function(input, output) {
   output$monteCarloError <- renderPlot({
     valor <- pnorm(2)-1/2
     #estim2 <- mean(phi(U))
-    estim <- rep(0,input$num)
+    error <- rep(0,input$num)
     #La densidad de la exponencial truncada
     fun <- function(x) dexp(x)/(1-exp(-2))
     #Montecarlo
@@ -71,11 +71,11 @@ shinyServer(function(input, output) {
       U<-runif(i,0,2)
       #exponencial(1) truncada a [0,2]
       X<- -log(1 - (1 - (1-exp(-2))*U))
-      estim[i] <- mean(phi(U)) - valor
+      error[i] <- mean(phi(U)) - valor
     }
     
-    t <- seq(1, input$num, 1) 
-    plot(t,estim, main = "MonteCarlo Error ", type="l",col="red")
+    muestras <- seq(1, input$num, 1) 
+    plot(muestras,error, main = "MonteCarlo Error ", type="l",col="red")
     
   })
   
@@ -86,30 +86,3 @@ shinyServer(function(input, output) {
 
 
 
-#El verdadero valor es:
-#pnorm(10)-1/2
-#lo mismo pero diferente
-#nsim <- 10000
-#usamos metodo de la funcion inversa
-#U<-runif(nsim,0,10)
-#exponencial(1) truncada a [0,10]
-#X<- -log(1 - (1 - (1-exp(-2))*U))
-#la densidad de la exponencial truncada
-#fun <- function(x) dexp(x)/(1-exp(-2))
-#monte carlos
-#phi <- function(x) dnorm(x)/fun(x)
-#estim2 <- mean(phi(U))
-
-#otro ejemplo
-
-#a<-0
-#b <- 1000
-#nsim <- 100
-
-#crudo
-#U <- runif(nsim, a, b)
-#mean((b-a)*dnorm(U))
-
-#prioritario
-#U <- rexp(nsim,rate = 4)
-#mean(dnorm(U)/dexp(U))
