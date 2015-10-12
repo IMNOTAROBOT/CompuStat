@@ -15,20 +15,30 @@ shinyUI(fluidPage(
   # Sidebar with a slider input for number of bins
   sidebarPanel(
     sliderInput("bins",
-                "Numero de categorías:",
+                "Numero de categorias:",
                 min = 1,
                 max = 100,
                 value = 50),
     sliderInput("rep",
-                "Numero de repeticiones:",
+                "Numero de repeticiones del experimento:",
                 min = 1,
                 max = 5000,
                 value = 500),
-    numericInput("num", 
-                 label = "Numero de muestras:", 
+    sliderInput("N", 
+                 label = "Numero de muestras por exp (N):", 
                  min = 1,
                  max = 10000,
-                 value = 500)
+                 value = 500),
+    sliderInput("m",
+                "Valor de m:",
+                min = 1,
+                max = 100,
+                value = 1),
+    sliderInput("lambda",
+                "Valor de lambda:",
+                min = 1,
+                max = 100,
+                value = 1)
   ),
   
   mainPanel(
