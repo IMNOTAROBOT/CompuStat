@@ -38,11 +38,12 @@ shinyUI(fluidPage(
   mainPanel(
     h3("Resultados:") ,
     tabsetPanel(
-      tabPanel('Correlacion Teorica',h4('Relacion entre el numero de crimenes y el gasto policiaco de la poblacion total'),
-               plotOutput("corr60")),
       tabPanel('Bootstrap',h5(textOutput("corrBoot")),h5(textOutput("errBoot")),
                plotOutput("corrBootHist"), h4('Datos de intervalos de confianza: (basic, norm, perc)'),
-               h5(textOutput("boot.ci.print"))),
+               h5(textOutput("boot.ci.print")), h5('Se muestra la distribucion muestral en azul y la distribucion resultado de bootstrap. Los percentiles de 95% marcados en rojo y la correlacion muestral 
+                                 y corr de poblacion en azul. La estimada por bootstrap en verde'), plotOutput("super")),
+      tabPanel('Correlacion Teorica',h4('Relacion entre el numero de crimenes y el gasto policiaco de la poblacion total'),
+               plotOutput("corr60")),
       tabPanel('Los datos usados', h4('Estadisticas de crimenes (poblacion total)'),
                dataTableOutput("tableData"))
     )

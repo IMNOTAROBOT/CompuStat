@@ -80,7 +80,7 @@ shinyServer(function(input, output) {
     })
     
     #Estimando la distribucion muestral del estimador de la correlacion porque son pocos datos
-    b_int<- 5000
+    b_int<- 5000 
     r <- rep(0, b_int)
     for (i_int in 1:b_int) {
       i_mues <- sample(1:47, n_muestra_crime, replace=F)
@@ -89,8 +89,8 @@ shinyServer(function(input, output) {
     }
     
     par(mfrow=c(1,2))
-    hist(R, xlab="correlacion", main="Replicas bootstrap",breaks=15)
-    hist(r, xlab="correlacion", main="Distribucion muestral", breaks=15)
+    hist(R, xlab="correlacion", col=rgb(0,0,1,1/4),main="Replicas bootstrap",breaks=15)
+    hist(r, xlab="correlacion", col=rgb(1,0,0,1/4),main="Distribucion muestral", breaks=15)
     
     #Para calcular los percentiles
     theta <- function(xdata, x){
@@ -99,10 +99,23 @@ shinyServer(function(input, output) {
     
     boot_data <- cbind(crimerat = crime$crimerat, police60 = crime$police60)
     boot.out<-boot(boot_data,statistic=theta ,R=B)
+    bootAn <- boot.ci(boot.out,type=c("basic","norm","perc"))
     output$boot.ci.print <- renderPrint({ 
       boot.ci(boot.out,type=c("basic","norm","perc"))
     })
     
+    output$super <- renderPlot({
+    #Normalizando histogramas
+    p1 <- hist(R, xlab="correlacion", main="Replicas bootstrap",breaks=15)
+    p2 <- hist(r, xlab="correlacion", breaks=15)
+    p1$density <- p1$counts/sum(p1$counts)
+    p2$density <- p2$counts/sum(p2$counts)
+    plot( p1,freq = F,col=rgb(0,0,1,1/4), ylim=c(0,0.4), xlim=c(0,1.1))
+    plot( p2, freq = F,col=rgb(1,0,0,1/4), ylim=c(0,1.1), xlim=c(0,1.1),add=T)
+    abline(v = c(bootAn$percent[4],bootAn$percent[5],corr.muestra_crime), col = "red", lty = 3)
+    abline(v = corr.pob_crime, col = "blue", lty = 3)
+    abline(v = corr_crime.b, col = "green", lty = 3)
+    })
   })
 
   
