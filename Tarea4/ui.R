@@ -1,8 +1,8 @@
 
-# TAREA 3. MONTECARLO
+# TAREA 4. BOOTSTRAP (Metodo de percentiles)
 # USER INTERFACE
 # KAREN POBLETE 116452
-# 31/AGO/2015
+# 10/OCT/2015
 #
 
 library(shiny)
@@ -10,42 +10,41 @@ library(shiny)
 shinyUI(fluidPage(
 
   # Application title
-  headerPanel("Montecarlo"),
+  headerPanel("Tarea 4: Bootstrap (Metodo de percentiles)"),
+  
+  h5("Esta aplicacion ejemplifica la utilizacion del metodo de remuestreo bootstrap con MonteCarlo 
+     y el rechazo de estimaciones fuera del intervalo de confianza por medio del metodo de percentiles."),
   
   # Sidebar with a slider input for number of bins
   sidebarPanel(
-    sliderInput("bins",
-                "Numero de categorias:",
+    sliderInput("tam_muestra",
+                "Tamano de la muestra usada:",
                 min = 1,
-                max = 100,
-                value = 50),
-    sliderInput("rep",
-                "Numero de repeticiones del experimento:",
+                max = 45,
+                value = 15),
+    sliderInput("B",
+                "Numero de muestras usadas en remuestreo:",
                 min = 1,
                 max = 5000,
                 value = 500),
-    sliderInput("N", 
-                 label = "Numero de muestras por exp (N):", 
-                 min = 1,
-                 max = 10000,
-                 value = 500),
-    sliderInput("m",
-                "Valor de m:",
-                min = 1,
-                max = 100,
-                value = 1),
-    sliderInput("lambda",
-                "Valor de lambda:",
-                min = 1,
-                max = 100,
-                value = 1)
+    h3("Caracteristicas de la poblacion"),
+    h5(textOutput("corrReal")), 
+    h5(textOutput("errReal")),
+    h3("Caracteristicas de la muestra"),
+    h5(textOutput("corrMues")), 
+    h5(textOutput("errMues"))
   ),
   
   mainPanel(
-    h3(textOutput("valReal")) ,
+    h3("Resultados:") ,
     tabsetPanel(
-      tabPanel('MonteCarlo crudo', plotOutput("monteCarloCrudo"),h3(textOutput("alphaCrudo")),h3("Error"), plotOutput("monteCarloCrudoError")),
-      tabPanel('MonteCarlo',plotOutput("monteCarlo"), h3(textOutput("alphaMonte")),h3("Error"), plotOutput("monteCarloError"))
+      tabPanel('Correlacion Teorica',h4('Relacion entre el numero de crimenes y el gasto policiaco de la poblacion total'),
+               plotOutput("corr60")),
+      tabPanel('Bootstrap',h5(textOutput("corrBoot")),h5(textOutput("errBoot")),
+               plotOutput("corrBootHist"), h4('Datos de intervalos de confianza: (basic, norm, perc)'),
+               h5(textOutput("boot.ci.print"))),
+      tabPanel('Los datos usados', h4('Estadisticas de crimenes (poblacion total)'),
+               dataTableOutput("tableData"))
     )
     
   )
