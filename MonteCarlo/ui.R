@@ -14,11 +14,11 @@ shinyUI(fluidPage(
   
   # Sidebar with a slider input for number of bins
   sidebarPanel(
-    sliderInput("bins",
-                "Numero de categorias:",
-                min = 1,
-                max = 100,
-                value = 50),
+    sliderInput("alpha",
+                "Grado de Confianza",
+                min = 0,
+                max = 1,
+                value = 0.05),
     sliderInput("rep",
                 "Numero de repeticiones del experimento:",
                 min = 1,
@@ -42,10 +42,10 @@ shinyUI(fluidPage(
   ),
   
   mainPanel(
-    h3(textOutput("valReal")) ,
+    h4(textOutput("valReal")) ,
     tabsetPanel(
-      tabPanel('MonteCarlo crudo', plotOutput("monteCarloCrudo"),h3(textOutput("alphaCrudo")),h3("Error"), plotOutput("monteCarloCrudoError")),
-      tabPanel('MonteCarlo',plotOutput("monteCarlo"), h3(textOutput("alphaMonte")),h3("Error"), plotOutput("monteCarloError"))
+      tabPanel('MonteCarlo crudo', plotOutput("monteCarloCrudo"),h5(textOutput("alphaCrudo")),h4("Error"), plotOutput("monteCarloCrudoError")),
+      tabPanel('MonteCarlo',plotOutput("monteCarlo"), h5(textOutput("alphaMonte")),h4("Error"), plotOutput("monteCarloError"))
     )
     
   )
