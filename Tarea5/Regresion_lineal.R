@@ -110,7 +110,9 @@ plot(rej.rate, type="l", ylim=c(0,1), main="Rejection rate")
 plot(trials[-1], type="l", main="Number of trials")
 ### 2) AUTOCORRELATION
 acf(estims[ , 1])
-acf(estims[ , 2]) # WARNING HERE!
+acf(estims[ , 2]) 
+acf(estims[ , 3])
+acf(estims[ , 4])
 # burnin and subsampling
 burnin <- 100
 estim <- estims[-(1:burnin),]
@@ -119,19 +121,31 @@ thinning <- 0.75 # meaning we'll keep 75% of observations to reduce autocorrelat
 sub <- sample.int(nsim-burnin, size=round(thinning*nsim))
 estims <- estims[sub, ]
 acf(estims[ , 1])
-acf(estims[ , 2]) 
+acf(estims[ , 2])
+acf(estims[ , 3])
+acf(estims[ , 4])
 
 # LET'S COMPARE PRIORS AND POSTERIORS AND DO INFERENCE
 
 hist(estims[ ,1], prob=TRUE, xlim=c(0.5,2.5), breaks=20, col="lightgreen",
-     main="Histogram and Posterior(blue) vs Prior(red) of the Mean") # posterior distribution of mean
+     main="Histogram and Posterior(blue) vs Prior(red) of beta1") # posterior distribution of mean
 plot(prior.beta1, xlim=c(0.5,2.5), col="darkred", lwd="2", ylim=c(0,10), add=TRUE)
 lines(density(estims[ ,1]), col="darkblue", lwd="2")
 
 hist(estims[ ,2], prob=TRUE, xlim=c(0,1), breaks=40, col="yellow",
-     main="Histogram and Posterior(blue) vs Prior(red) of the s.d.") # posterior distribution of mean
+     main="Histogram and Posterior(blue) vs Prior(red) of beta2") # posterior distribution of mean
 plot(prior.sd, xlim=c(0,1), col="darkred", lwd="2", ylim=c(0,10), add=TRUE)
 lines(density(estims[ ,2]), col="darkblue", lwd="2")
+
+hist(estims[ ,3], prob=TRUE, xlim=c(0,1), breaks=40, col="yellow",
+     main="Histogram and Posterior(blue) vs Prior(red) of beta2") # posterior distribution of mean
+plot(prior.sd, xlim=c(0,1), col="darkred", lwd="2", ylim=c(0,10), add=TRUE)
+lines(density(estims[ ,3]), col="darkblue", lwd="2")
+
+hist(estims[ ,4], prob=TRUE, xlim=c(0,1), breaks=40, col="yellow",
+     main="Histogram and Posterior(blue) vs Prior(red) of beta2") # posterior distribution of mean
+plot(prior.sd, xlim=c(0,1), col="darkred", lwd="2", ylim=c(0,10), add=TRUE)
+lines(density(estims[ ,4]), col="darkblue", lwd="2")
 
 mean(estims[ ,1]) # approx. mean-value of the posterior of beta1
 mean(estims[ ,2]) # approx. mean-value of the posterior of beta2
@@ -139,6 +153,11 @@ mean(estims[ ,3]) # mean-value of the posterior beta3
 mean(estims[ ,4]) # mean-value del error
 # CERTAINTY INTERVALS
 alpha <- 0.05
-intervals3 <- quantile(estims[ ,1], c(alpha/2, 1-alpha/2))
+intervals1 <- quantile(estims[ ,1], c(alpha/2, 1-alpha/2))
+intervals1
+intervals2 <-quantile(estims[ ,2], c(alpha/2, 1-alpha/2)) 
+intervals2
+intervals3 <-quantile(estims[ ,3], c(alpha/2, 1-alpha/2)) 
 intervals3
-quantile(estims[ ,2], c(alpha/2, 1-alpha/2)) 
+intervals4 <-quantile(estims[ ,4], c(alpha/2, 1-alpha/2)) 
+intervals4
