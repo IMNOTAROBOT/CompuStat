@@ -22,6 +22,8 @@ hist(errors)
 qqnorm(errors)
 plot(errors,Y.pred)
 
+beta.hat
+
 ##BAYES STATISTICS
 prior.beta1 <- function(x) dnorm(x, 1, 0.2)
 prior.beta2 <- function(x) dnorm(x, 1, 0.2)
@@ -49,7 +51,7 @@ cppFunction('
             }
             return newtheta;
             }')
-proposal(c(1,1,1,1,1),dataMat)
+proposal(c(1,1,1,1),dataMat)
 
 #Funcion objetivo
 cppFunction('
@@ -58,15 +60,15 @@ cppFunction('
             double lkh, logprior, yhat;
             int m = x.nrow();
             int p =x.ncol();
-            NumericVector beta(m-1);
+            NumericVector beta(p-1);
             double sd;
             
             //Primer valor de las betas
-            for(i=0;i<p;i++){
+            for(i=0;i<p-1;i++){
               beta[i]=theta[i];
             }
             
-            sd = theta[p]; //El error
+            sd = theta[p-1]; //El error
             NumericVector aux(m);
 
             // Compute loglikelihood
@@ -78,7 +80,7 @@ cppFunction('
             }
             // Compute logprior
             logprior = 0.0;
-            for(int j = 0; j<p;j++){
+            for(int j = 0; j<p-1;j++){
               logprior += R::dnorm(beta[j],0.0,100,true);
             }
             logprior += R::dgamma(sd, 3.0, 0.5, true);
@@ -90,7 +92,7 @@ objdens(dataMat, c(1,1,1,1), Y)
 
 sourceCpp("BayesianMHlineal.cpp")
 
-nsim <- 20000
+nsim <- 10000
 init <- c(1,1,1,1)
 mh.samp <- MHBayes(nsim, init, objdens, proposal, dataMat, Y)
 estims <- mh.samp$theta
@@ -161,3 +163,8 @@ intervals3 <-quantile(estims[ ,3], c(alpha/2, 1-alpha/2))
 intervals3
 intervals4 <-quantile(estims[ ,4], c(alpha/2, 1-alpha/2)) 
 intervals4
+
+#Comparacion
+estimaciones <- c(mean(estims[ ,4]),mean(estims[ ,1]),mean(estims[ ,2]),mean(estims[ ,3]))
+summary(mod)
+beta.hat
