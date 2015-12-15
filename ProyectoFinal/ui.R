@@ -1,8 +1,8 @@
 
-# TAREA 6. GIBBS SAMPLING
+# PROJECTO FINAL
 # USER INTERFACE
 # KAREN POBLETE 116452
-# 18/NOV/2015
+# 10/DIC/2015
 #
 
 library(shiny)
@@ -10,18 +10,18 @@ library(shiny)
 shinyUI(fluidPage(
 
   # Application title
-  headerPanel("Tarea 6: GIBBS SAMPLING"),
+  headerPanel("Proyecto final Estadistica Computacional: Corrector ortografico"),
   
-  h5("Esta aplicacion genera las marginales de mu y sigma^2 por medio del metodo de muestreo de GIBBS para dos ejemplos."),
-  
+  h5("Se utiliza el metodo de Bayes con modelo de canal ruidoso y modelo de lenguaje con unigramas y bigramas."),
+  sidebarPanel(
+    textInput("texto_mal", label = h3("Texto a corregir"), 
+              value = "<s> <coma> ademas de </s>"),
+    submitButton("Update View")
+  ),
   mainPanel(
-    h3("GIBBS SAMPLING") ,
+    h3("Corrector Ortográfico") ,
     tabsetPanel(
-      tabPanel('IRIS',h5(textOutput("meanSEPALLENGTH")),h5(textOutput("varSEPALLENGTH")),
-               h5(textOutput("meanSEPALLENGTHGIBBS")),h5(textOutput("varSEPALLENGTHGIBBS")),plotOutput("IRISPLOT")),
-      tabPanel('Datos IRIS', dataTableOutput("DatosIRIS")),
-      tabPanel('X NORMAL',h5(textOutput("meanNORM")),h5(textOutput("varNORM")),
-               h5(textOutput("meanNORMGIBBS")),h5(textOutput("varNORMGIBBS")),plotOutput("NORMPLOT"))
+      tabPanel('Unigramas',h5(textOutput("unigrama_res")), h5("Con bigramas"), h5(textOutput("bigrama_res")))
     )
     
   )
