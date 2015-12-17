@@ -176,7 +176,7 @@ corregirBi <- function(oracion){
   corregir.ind <- !(pals %in% vocabulario)
   pals.corregir <- c(pals[corregir.ind - 1], pals[corregir.ind], pals[corregir.ind +1])
   candidatos <- sapply(pals.corregir, function(pal){
-    cand.1 <- candidatos(pal[2])
+    cand.1 <- candidatos(pal)
     cand.2 <- unique(unlist(lapply(cand.1, candidatos)))
     d.1 <- frecs.candBi(filtrar.candBi(cand.1, pal))
     d.2 <- frecs.candBi(filtrar.candBi(cand.2, pal))
@@ -192,5 +192,47 @@ corregirBi <- function(oracion){
   paste(pals.1, collapse = ' ')
 }
 
-corregirBi('eatin')
+##Evaluación del modelo de lenguaje
+
+crear_frase_uni <- function(k=10){
+  muestra <- sample_n(uni.6, k, weight = frec)$w1
+  paste(muestra, collapse = " ")
+}
+crear_frase_bi <- function(k=10, comienzo='<s>'){
+  actual <- comienzo
+  frase <- ''
+  for(j in 1:k){
+    pal <- big.6 %>% filter(w1==actual) %>% sample_n(size =1, weight=frec)
+    actual <- pal$w2
+    frase <- paste(frase, actual, sep=' ')
+  }
+  frase.1 <- gsub("<punto_coma>", ";", frase)
+  frase.2 <- gsub("<coma>", ",", frase.1)
+  frase.3 <- gsub("</s> <s> <s>", ".\n", frase.2)
+  frase.3.1 <- gsub("</s> <s>", ".", frase.3)
+  frase.4 <- gsub("<dos_puntos>", ":", frase.3.1)
+  frase.4
+}
+
+# Crear texto con trigramas
+crear_frase_tri <- function(k=10, comienzo1='<s>', comienzo2='<s>'){
+  actual <- comienzo1
+  siguiente <- comienzo2
+  frase <- ''
+  for(j in 1:k){
+    pal <- trig.6 %>% filter(w1==actual & w2==siguiente) %>% sample_n(size =1, weight=frec)
+    actual <- pal$w2
+    siguiente <- pal$w3
+    frase <- paste(frase, actual, sep=' ')
+  }
+  frase.1 <- gsub("<punto_coma>", ";", frase)
+  frase.2 <- gsub("<coma>", ",", frase.1)
+  frase.3 <- gsub("</s> <s> <s>", ".\n", frase.2)
+  frase.3.1 <- gsub("</s> <s>", ".", frase.3)
+  frase.4 <- gsub("<dos_puntos>", ":", frase.3.1)
+  frase.4
+}
+
+set.seed(2992)
+crear_frase_uni(k=40)
 
