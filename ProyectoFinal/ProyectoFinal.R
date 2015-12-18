@@ -63,19 +63,19 @@ unigramas.cuenta$p <- unigramas.cuenta$frec/sum(unigramas.cuenta$frec)
 unigramas.cuenta$log.p <- log(unigramas.cuenta$p)
 head(unigramas.cuenta,10)
 #save(unigramas.cuenta, file='Rdata/unigramas.cuenta_corto2.Rdata')
-#load('Rdata/unigramas.cuenta.Rdata')
+#load('Rdata/unigramas.cuenta_corto2.Rdata')
 
 bigramas.cuenta$p <- bigramas.cuenta$frec/sum(bigramas.cuenta$frec)
 bigramas.cuenta$log.p <- log(bigramas.cuenta$p)
 head(bigramas.cuenta,10)
 #save(bigramas.cuenta, file='Rdata/bigramas.cuenta_corto2.Rdata')
-#load('Rdata/bigramas.cuenta.Rdata')
+#load('Rdata/bigramas.cuenta_corto2.Rdata')
 
 trigramas.cuenta$p <- trigramas.cuenta$frec/sum(trigramas.cuenta$frec)
 trigramas.cuenta$log.p <- log(trigramas.cuenta$p)
 head(trigramas.cuenta,10)
 #save(trigramas.cuenta, file='Rdata/trigramas.cuenta_corto.Rdata')
-#load('Rdata/trigramas.cuenta.Rdata')
+#load('Rdata/trigramas.cuenta_corto.Rdata')
 
 #####################################################################
 ### Producción de candidatos
@@ -235,5 +235,29 @@ crear_frase_tri <- function(k=10, comienzo1='<s>', comienzo2='<s>'){
 
 
 ###validar modelos
+errores <- read.table("datos/errores_wikipedia.txt", sep="|", header=FALSE, quote="", 
+                      stringsAsFactors=FALSE,encoding="UTF-8") 
+names(errores) <- c("Bien", "Error")
+head(errores)
 
+spelltest <- function(errores,){
+  bien <- 0
+  mal <- 0
+  resp <- rep("", dim(errores)[1])
+  for(i in 1:dim(errores)[1]){
+    aux <- corregirUni(errores$Error[i])
+    distd <- adist(errores$Bien[i], aux)
+    if(distd == 0){
+      bien <- bien + 1
+    }else{
+      mal <- mal + 1
+    }
+  }
+  
+}
 
+distancias.1 <- apply(errores, 1, function(x) {adist(x[1], x[2])[1,1]})
+error.d1 <- errores[distancias.1==1, ]
+mat.transf <- apply(error.d1,1, function(x){attr(adist(x[1], x[2], counts=T), 'counts')})
+sustituciones <- mat.transf[3,]==1
+error.sus <- error.d1[sustituciones,]
