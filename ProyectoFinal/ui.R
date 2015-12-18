@@ -34,7 +34,7 @@ shinyUI(fluidPage(
       tabPanel('Set de Unigramas', dataTableOutput("unigramas_tab")),
       tabPanel('Set de Bigramas', dataTableOutput("bigramas_tab")),
       tabPanel('Set de Trigramas', dataTableOutput("trigramas_tab")),
-      tabPanel('Evaluación del modelo de lenguaje', h4('Con unigramas:'), textOutput("unigram_text"),
+      tabPanel('Generar texto con modelo de lenguaje', h4('Con unigramas:'), textOutput("unigram_text"),
                h4('Con bigramas:'), textOutput("bigram_text"), h4('Con trigramas:'), textOutput("trigram_text"))
     )
     

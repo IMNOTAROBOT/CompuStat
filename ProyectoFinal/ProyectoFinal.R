@@ -233,6 +233,7 @@ crear_frase_tri <- function(k=10, comienzo1='<s>', comienzo2='<s>'){
   frase.4
 }
 
-set.seed(2992)
-crear_frase_uni(k=40)
+
+###validar modelos
+
 
