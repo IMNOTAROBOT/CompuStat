@@ -25,7 +25,8 @@ shinyUI(fluidPage(
     #actionButton("activo_bi_cand", "Muestra candidatos"),
     h5("El proceso puede tardar un rato."),
     h5("El resultado es:"),
-    h5(textOutput("bigrama_res"))
+    h5(textOutput("bigrama_res"),
+       actionButton("activo_prueba", "Prueba con unigramas")   )
   ),
   mainPanel(
     h3("Corrector Ortográfico") ,
@@ -35,7 +36,8 @@ shinyUI(fluidPage(
       tabPanel('Set de Bigramas', dataTableOutput("bigramas_tab")),
       tabPanel('Set de Trigramas', dataTableOutput("trigramas_tab")),
       tabPanel('Generar texto con modelo de lenguaje', h4('Con unigramas:'), textOutput("unigram_text"),
-               h4('Con bigramas:'), textOutput("bigram_text"), h4('Con trigramas:'), textOutput("trigram_text"))
+               h4('Con bigramas:'), textOutput("bigram_text"), h4('Con trigramas:'), textOutput("trigram_text")),
+      tabPanel('Validacion', h5(dataTableOutput("unigrama_prueba")))
     )
     
   )

@@ -256,8 +256,20 @@ spelltest <- function(errores,){
   
 }
 
+#Ver la distancia de los errores más comunes en español
 distancias.1 <- apply(errores, 1, function(x) {adist(x[1], x[2])[1,1]})
 error.d1 <- errores[distancias.1==1, ]
 mat.transf <- apply(error.d1,1, function(x){attr(adist(x[1], x[2], counts=T), 'counts')})
 sustituciones <- mat.transf[3,]==1
 error.sus <- error.d1[sustituciones,]
+
+#430 errores
+
+#Muestra que letras son sustituidas por otras.
+sustituciones <- apply(error.sus, 1, function(x){ 
+  s.1 <- strsplit(x[1], split="")[[1]]
+  s.2 <- strsplit(x[2], split="")[[1]]
+  posicion <- which(s.1!=s.2)
+  c(s.1[posicion], s.2[posicion])
+})
+sustituciones

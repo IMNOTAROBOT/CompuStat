@@ -22,6 +22,10 @@ shinyServer(function(input, output) {
   letras <- c(letters,'á', 'é','í','ó','ú','ñ')
   set.seed(142857)
   
+  errores <- read.table("datos/errores_wikipedia.txt", sep="|", header=FALSE, quote="", 
+                        stringsAsFactors=FALSE,encoding="UTF-8") 
+  names(errores) <- c("Bien", "Error")
+  
   output$unigrama_res <- renderText({
     corrector_unigram()
   })
@@ -339,6 +343,95 @@ shinyServer(function(input, output) {
   })
   
   #Probar el sistema 
+  output$unigrama_prueba <- renderDataTable({
+    uniprueba()
+  })
   
+  uniprueba <- eventReactive(input$activo_prueba ,{
+    #Producimos todos los candidatos 
+    candidatos <- function(s){
+      s.vec <- strsplit(s, split='')[[1]]
+      substitute_1 <- Vectorize(function(x,y){
+        z <- s.vec
+        z[x] <- y
+        paste(z, collapse='')
+      })
+      insert_1 <- Vectorize(function(x,y){
+        if(x==0) prev <- '' else prev <-  s.vec[1:x] 
+        if(x==length(s.vec)) post <- '' else 
+          post <- s.vec[(x+1):length(s.vec)]
+        paste(c(prev, y, post), collapse='')
+      })
+      remove_1 <- function(x){
+        paste(s.vec[-x], collapse='')
+      }
+      transpose_1 <- function(x){
+        z <- s.vec
+        z[x+1] <- s.vec[x]
+        z[x] <- s.vec[x+1]
+        paste(z, collapse='')
+      }
+      lista_1 <- as.character(outer(1:length(s.vec), letras, FUN='substitute_1'))
+      lista_2 <- as.character(outer(0:length(s.vec), letras, FUN='insert_1') )
+      lista_3 <- sapply(1:length(s.vec), remove_1)
+      lista_4 <- sapply(1:(length(s.vec)-1), transpose_1)
+      lista.candidatos <- unique(c(s, lista_1, lista_2, lista_3, lista_4))
+      lista.candidatos
+    }
+    
+    #Filtrar candidatos por palabras
+    vocabulario <- unigramas.cuenta$w1
+    
+    filtrar.cand <- function(cand){
+      cand[cand %in% vocabulario]
+    }
+    
+    #calculando las frecuencias
+    frecs.cand <- function(cand){
+      cand.df.1 <- data.frame(w1=cand, stringsAsFactors=FALSE)
+      res.1 <- inner_join(unigramas.cuenta, cand.df.1) %>% arrange(desc(frec))
+      res.1
+    }
+    
+    #Ahora hacemos una función para corregir una oración con unigramas:
+    corregirUni <- function(oracion){
+      pals <- strsplit(oracion, " ")[[1]]
+      corregir.ind <- !(pals %in% vocabulario)
+      pals.corregir <- pals[corregir.ind]
+      candidatos <- sapply(pals.corregir, function(pal){
+        cand.1 <- candidatos(pal)
+        cand.2 <- unique(unlist(lapply(cand.1, candidatos)))
+        d.1 <- frecs.cand(filtrar.cand(cand.1))
+        d.2 <- frecs.cand(filtrar.cand(cand.2))
+        d.1$log.canal <- log(999/1000)
+        d.2$log.canal <- log(1/1000)
+        d <- rbind(d.1, d.2)
+        d$log.post <- d$log.p + d$log.canal
+        arrange(d, desc(log.post))[1,1]
+      })
+      candidatos
+      pals.1 <- pals
+      pals.1[corregir.ind] <- candidatos
+      paste(pals.1, collapse = ' ')
+    }
+    
+    spelltest <- function(errores){
+      bien <- 0
+      mal <- 0
+      resp <- rep("", dim(errores)[1])
+      for(i in 1:dim(errores)[1]){
+        aux <- corregirUni(errores$Error[i])
+        distd <- adist(errores$Bien[i], aux)
+        if(distd == 0){
+          bien <- bien + 1
+        }else{
+          mal <- mal + 1
+        }
+      }
+      cbind(Buenas = bien, Malas = mal)
+    }
+    
+    spelltest(errores)
+  })
   
 })  
